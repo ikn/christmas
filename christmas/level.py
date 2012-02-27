@@ -153,7 +153,6 @@ class Level:
                 script_i = randrange(len(conf.SCRIPTS))
                 script = list(conf.SCRIPTS[script_i])
                 if self.hard and random() < conf.ALT_SCRIPT_PROB:
-                    print 'alt'
                     # alternative script
                     for i, new in conf.ALT_SCRIPTS[script_i]:
                         script[i] = new

@@ -10,7 +10,7 @@ MUSIC_DIR = DATA_DIR + 'music' + sep
 FONT_DIR = DATA_DIR + 'font' + sep
 
 # display
-WINDOW_ICON = None #IMG_DIR + 'icon.png'
+WINDOW_ICON = IMG_DIR + 'icon.png'
 WINDOW_TITLE = 'Unintentional Christmas Tree'
 MOUSE_VISIBLE = True
 FLAGS = 0
