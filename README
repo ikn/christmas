@@ -1,0 +1,38 @@
+Unintentional Christmas Tree: a game where red and green blocks fall towards an
+floor of alternating colours.
+
+This was made for Pirate Kart V in February 2012.
+
+    DEPENDENCIES
+
+Python (2.6 or later 2.x)
+Pygame (1.8 or later, probably; tested with 1.9.1)
+
+    RUNNING
+
+./configure
+./run
+
+    PLAYING
+
+Use the arrow keys to move the floor left and right.  If a block lands where
+the floor is a different colour to itself, something bad happens depending on
+the mode; otherwise, it stays where it lands.  Press space to release all
+landed blocks and gain points; the more blocks on the ground, the more points
+you get.
+
+    CONTROLS
+
+left/right, A/D: move.
+1, 2: select a mode on the title screen.
+1, 2, enter, space: continue at the lose screen.
+escape, backspace: pause/unpause.
+
+A/D works for other keyboard layouts too: QWERTZ, AZERTY, Dvorak, Colemak.
+
+To quit, close the window.  Easy mode does not have a lose condition.
+
+    LICENSING
+
+Source code is available under the new BSD license (included).  External
+modules (in christmas/ext/) are available under the GPL, version 3.
