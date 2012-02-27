@@ -67,7 +67,7 @@ class Level:
             (conf.KEYS_LEFT, [(self.move, (-1,))]) + repeat,
             (conf.KEYS_RIGHT, [(self.move, (1,))]) + repeat,
             (conf.KEYS_UP, self.push, eh.MODE_ONDOWN),
-            (conf.KEYS_BACK, self.toggle_paused, eh.MODE_ONDOWN)
+            (conf.KEYS_BACK, self.quit, eh.MODE_ONDOWN)
         ])
         self.init(conf.COLS, hard)
 
@@ -88,13 +88,24 @@ class Level:
         self.script_start_t = 0
         self.script_invert_colour = randrange(2)
         # other stuff
-        self.score_pos = [ir(x * s) for x, s in zip(conf.SCORE_POS, self.game.res)]
-        self.score_shadow_offset = tuple(ir(x * s) for x, s in zip(conf.SCORE_SHADOW_OFFSET, self.game.res))
+        w, h = res = self.game.res
+        self.score_pos = [ir(x * s) for x, s in zip(conf.SCORE_POS, res)]
+        self.score_shadow_offset = tuple(ir(x * s) for x, s in zip(conf.SCORE_SHADOW_OFFSET, res))
         self.set_score(0)
-        self.paused = False
+        self.quitting = False
+        # quitting text
+        font = (conf.FONT, ir(conf.SCORE_SIZE * h), False)
+        shadow = (conf.SCORE_SHADOW_COLOUR, self.score_shadow_offset)
+        font_args = (font, conf.QUITTING_TEXT, conf.SCORE_COLOUR, shadow)
+        self.quit_sfc = self.game.img(font_args)[0]
+        self.quit_pos = [ir((1 - x) * s) - d for x, s, d in zip(conf.SCORE_POS, res, self.quit_sfc.get_size())]
 
-    def toggle_paused (self, *args):
-        self.paused = not self.paused
+    def quit (self, *args):
+        if self.quitting:
+            self.game.quit_backend(no_quit = True)
+            self.game.start_backend(LoseScreen, self.score)
+        else:
+            self.quitting = True
 
     def move (self, key, evt, mods, dirn):
         self.first_col = (self.first_col + dirn) % 2
@@ -142,8 +153,6 @@ class Level:
         self.col_blocks[col].append(block)
 
     def update (self):
-        if self.paused:
-            return
         # add blocks
         script = self.script
         current_t = self.t
@@ -225,8 +234,6 @@ class Level:
         self.score_sfc = self.game.img(font_args)[0]
 
     def draw (self, screen):
-        if self.paused:
-            return
         # BG
         screen.fill(conf.BG)
         # floor
@@ -241,6 +248,9 @@ class Level:
             b.draw(screen)
         # score
         screen.blit(self.score_sfc, self.score_pos)
+        # quit text
+        if self.quitting:
+            screen.blit(self.quit_sfc, self.quit_pos)
         return True
 
 class LoseScreen:

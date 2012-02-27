@@ -114,6 +114,7 @@ LOST_SCORE_SIZE = .2 # ratio of screen height
 LOST_SCORE_SHADOW_OFFSET = (.006, .006) # screen width / height ratios
 LOST_SCORE_FORMAT = ':.3f'
 SCORE_DP = 2
+QUITTING_TEXT = 'Press again to quit.'''
 
 # appearance
 BG = (255, 255, 255)
