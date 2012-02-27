@@ -1,4 +1,4 @@
-from random import choice, triangular
+from random import random, randrange, triangular
 
 import pygame as pg
 
@@ -86,7 +86,7 @@ class Level:
         self.script = None
         self.t = 0
         self.script_start_t = 0
-        self.script_invert_colour = choice((0, 1))
+        self.script_invert_colour = randrange(2)
         # other stuff
         self.score_pos = [ir(x * s) for x, s in zip(conf.SCORE_POS, self.game.res)]
         self.score_shadow_offset = tuple(ir(x * s) for x, s in zip(conf.SCORE_SHADOW_OFFSET, self.game.res))
@@ -150,7 +150,13 @@ class Level:
         if script is None:
             if self.script_start_t <= current_t:
                 # start new script
-                script = list(choice(conf.SCRIPTS))
+                script_i = randrange(len(conf.SCRIPTS))
+                script = list(conf.SCRIPTS[script_i])
+                if self.hard and random() < conf.ALT_SCRIPT_PROB:
+                    print 'alt'
+                    # alternative script
+                    for i, new in conf.ALT_SCRIPTS[script_i]:
+                        script[i] = new
                 # adjust times
                 s = self.speed
                 self.script = script = [(ir(float(t) / s), i, c) for t, i, c in script]
@@ -167,7 +173,7 @@ class Level:
                 self.script = None
                 self.t = 0
                 self.script_start_t = triangular(*(ir(float(t) / self.speed) for t in conf.SCRIPT_GAP))
-                self.script_invert_colour = choice((0, 1))
+                self.script_invert_colour = randrange(2)
                 # increase speed
                 self.speed *= triangular(*conf.SPEED_INCREASE)
         self.t += 1
