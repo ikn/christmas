@@ -99,7 +99,8 @@ SPEED_INCREASE = (1.05, 1.1, 1.15)
 SCORE_MULTIPLIER = 1
 SCORE_SPEED_EXP = 3
 SCORE_BLOCKS_EXP = 1.15
-LOSE_SCORE_DECREASE = 50
+LOSE_SCORE_MULTIPLIER = 1
+LOSE_SCORE_MIN = 50
 
 # menus
 LOSE_SCREEN_WAIT = 30
@@ -112,9 +113,10 @@ START_TEXT = '''1: Easy
 LINE_SPACING = .05
 LOST_SCORE_SIZE = .2 # ratio of screen height
 LOST_SCORE_SHADOW_OFFSET = (.006, .006) # screen width / height ratios
-LOST_SCORE_FORMAT = ':.3f'
+LOST_SCORE_FORMAT = (':.0f', ':.3f') # (easy, hard)
 SCORE_DP = 2
 QUITTING_TEXT = 'Press again to quit.'''
+QUITTING_TIMEOUT = 180
 
 # appearance
 BG = (255, 255, 255)

@@ -103,9 +103,10 @@ class Level:
     def quit (self, *args):
         if self.quitting:
             self.game.quit_backend(no_quit = True)
-            self.game.start_backend(LoseScreen, self.score)
+            self.game.start_backend(LoseScreen, self.hard, self.score)
         else:
             self.quitting = True
+            self.quit_t = conf.QUITTING_TIMEOUT
 
     def move (self, key, evt, mods, dirn):
         self.first_col = (self.first_col + dirn) % 2
@@ -153,6 +154,10 @@ class Level:
         self.col_blocks[col].append(block)
 
     def update (self):
+        if self.quitting:
+            self.quit_t -= 1
+            if self.quit_t == 0:
+                self.quitting = False
         # add blocks
         script = self.script
         current_t = self.t
@@ -204,9 +209,11 @@ class Level:
                         # lost
                         if self.hard:
                             self.game.quit_backend(no_quit = True)
-                            self.game.start_backend(LoseScreen, self.score)
+                            self.game.start_backend(LoseScreen, self.hard, self.score)
                         else:
-                            self.set_score(self.score - conf.LOSE_SCORE_DECREASE * self.speed)
+                            blocks = conf.SCORE_BLOCKS_EXP ** sum(self.ground)
+                            decrease = max(conf.LOSE_SCORE_MULTIPLIER * blocks, conf.LOSE_SCORE_MIN)
+                            self.set_score(self.score - decrease)
             # if any block going up is now higher than one going down, they've collided
             ymax_up = min([gd] + [b.y - h for b in bs if b.dirn < 0])
             down = [b for b in bs if b.dirn > 0]
@@ -254,10 +261,11 @@ class Level:
         return True
 
 class LoseScreen:
-    def __init__ (self, game, event_handler, score):
+    def __init__ (self, game, event_handler, hard, score):
         self.game = game
         self.event_handler = event_handler
         self.frame = conf.FRAME
+        self.hard = hard
         self.score = score
         self.t = 0
         self.waiting = True
@@ -285,7 +293,8 @@ class LoseScreen:
             font = (conf.FONT, ir(conf.LOST_SCORE_SIZE * h), False)
             o = tuple(ir(x * s) for x, s in zip(conf.LOST_SCORE_SHADOW_OFFSET, (w, h)))
             shadow = (conf.SCORE_SHADOW_COLOUR, o)
-            text = ('Score:\n{0' + conf.LOST_SCORE_FORMAT + '}').format(self.score)
+            f = conf.LOST_SCORE_FORMAT[self.hard]
+            text = ('Score:\n{0' + f + '}').format(self.score)
             spacing = ir(conf.LINE_SPACING * h)
             font_args = (font, text, conf.SCORE_COLOUR, shadow, None, 1, False, spacing)
             sfc = self.game.img(font_args)[0]
