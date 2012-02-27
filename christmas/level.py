@@ -311,6 +311,7 @@ class StartScreen:
         self.event_handler = event_handler
         self.frame = conf.FRAME
         event_handler.add_key_handlers([
+            (conf.KEYS_BACK, lambda *args: self.game.quit(), eh.MODE_ONDOWN),
             (conf.KEYS_EASY, [(self.start, (False,))], eh.MODE_ONDOWN),
             (conf.KEYS_HARD, [(self.start, (True,))], eh.MODE_ONDOWN)
         ])

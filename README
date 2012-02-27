@@ -27,7 +27,7 @@ left/right, A/D: move.
 space, up, W: release blocks on the ground.
 1, 2: select a mode on the title screen.
 1, 2, enter, space: continue at the lose screen.
-escape, backspace: quit to title.
+escape, backspace: quit to title; exit at title.
 
 W/A/D works for other keyboard layouts too: QWERTZ, AZERTY, Dvorak, Colemak.
 
